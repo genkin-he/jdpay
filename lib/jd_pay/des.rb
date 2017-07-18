@@ -36,7 +36,7 @@ module JdPay
 
       # 有效数据长度数组
       def valid_size_array(num)
-        size_array = [num >> 24 & 0xff, num >> 16 & 0xff, num >> 8 & 0xff, num & 0xff]
+        [num >> 24 & 0xff, num >> 16 & 0xff, num >> 8 & 0xff, num & 0xff]
       end
 
       # 根据数组算出有效数据值

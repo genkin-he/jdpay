@@ -93,4 +93,39 @@ class JdPay::ServiceTest < Minitest::Test
   def test_notify_verify
     assert_equal @result, JdPay::Service.notify_verify(@response_body)
   end
+
+  def test_user_relation
+    xml_str = <<-EOF
+    <jdpay>
+      <version>V2.0</version>
+      <merchant>22294531</merchant>
+      <result>
+        <code>000000</code>
+        <desc>成功</desc>
+      </result> <encrypt>OWQxYWMyN2I1M2M1NmJhNThjNjc0YmY1ZWJlY2QyODU0YTc5NmQ3ZWQxMWU1NzE3MWQ0OTUwOGI5NzllYmE4ZjM1YzRiZjlmYWE1M2ZiYjVjYTg5YjA4NTdhMjg3NTBhNzQxM2ZjOWFlN2U3YTNlYzM5ZTI5OTBkZDczNzQ5MjhjM2UxMjhkYWJhMGM0NWY2MWFjYjg2YWFlZDBjOTQ1Y2UyOWNlMDg2MmViOTQ3ZDUyZTczOTMxYjM0NGQwZTNjZGVjZTNkY2EwZmZlYzZlODE1Njc3YWMzODcyNTRhYTcyZDc5MjNhYzc5YWIzZGM0ZGIwYWE4NTc3ZTRhNmE3YmMxMjIwMmEyZmRjMDgxNjhlZjQ5ODVlNGIwNmU2ZTVjZjk3MWRlMmQ5NWYxMmJjNmUwZTdkNTJlZjBmNDhlYzIwZDYzY2U1NGY4ZGU2YWIxNDE5OTk0ZjAwZDE0MzdkZmE1NGZjMGRhOTFhZGM1ZDg5MGY3NWU5MmQxMDYyYmZjZDZiNDA4NjhkMjdlYzYwNmEzYTk4YzRhYzQ5ZGM0NjhmN2M0MTYzZTQxMjNiYzhkOWQ1ZjcwOTU4ZDk5NmM1MWEyZDY1MDk4NjJhZmMyZTI0Y2M0YmQxYmRiMTYyOWZlYzY4ZTBkNTk3NjFjMWYxNDJhNTdjMzBiZWM4ZDE1ZGQyNDY3MGFlMGM0YzMzYjllZWMzZDYzY2MxNmZmOGNmNDc4YzYzZjJiZDRjOGY2YzYxZTgzMWVlM2E5YzEyZTM5ZmEwMjM0OTdjZTJjMjNlZWEyOGRkMGE5MGMyMTg5OGY3MTUwN2Q1MDI0OWVhNDE1ZDFkOTllYTI0MWZlNmU1NTQ5ZTg5MzhlYTJhNjVmZDk3ZTE0MDQ5ZmJiNjMzMDMzMDA0YTUwN2ZiMmYyYmFkN2E3OTZjNjZmZDgzMDVlZmQ3MjcwMzg0ZmU2ZTMxM2QyZjgxZjcxYWZlYzZmY2EzYg==</encrypt>
+    </jdpay>
+    EOF
+    stub_request(:post, JdPay::Service::USER_RELATION_URL).to_return(body: xml_str)
+    expect_xml = <<-EOF
+    <?xml version="1.0" encoding="UTF-8"?><jdpay><version>V2.0</version><merchant>22294531</merchant><result><code>000000</code><desc>成功</desc></result><isHas>true</isHas><sign>I1DPdvxF60UYSeTXbv+R3jnjp/Vy21paYo7pxgh6Wb/S1pjf4Cj0gOGYeCfWQullVrpL3UqGD/ZnX7Fz5Y8iuIaCgs0w3xGwe9Ww4MsxKnrzfRQ/sJhfZ9WE/3zJpQfg5yr5bVXrKROoBPjkpbWp78YH0KANZOV2EE0XkivwGJI=</sign></jdpay>
+    EOF
+    assert_equal Hash.from_xml(expect_xml), JdPay::Service.user_relation({userId: "123"})
+  end
+  def test_cancel_user
+    xml_str = <<-EOF
+    <jdpay>
+      <version>V2.0</version>
+      <merchant>22294531</merchant>
+      <result>
+        <code>000000</code>
+        <desc>成功</desc>
+      </result> <encrypt>ZmI3YmM5ZTVlODJhYzkyMjhjNjc0YmY1ZWJlY2QyODU0YTc5NmQ3ZWQxMWU1NzE3MWQ0OTUwOGI5NzllYmE4ZjM1YzRiZjlmYWE1M2ZiYjVjYTg5YjA4NTdhMjg3NTBhNzQxM2ZjOWFlN2U3YTNlYzM5ZTI5OTBkZDczNzQ5MjhjM2UxMjhkYWJhMGM0NWY2MWFjYjg2YWFlZDBjOTQ1Y2UyOWNlMDg2MmViOTQ3ZDUyZTczOTMxYjM0NGQwZTNjZGVjZTNkY2EwZmZlYzZlODE1Njc3YWMzODcyNTRhYTcyZDc5MjNhYzc5YWIzZGM0ZGIwYWE4NTc3ZTRhNmE3YmMxMjIwMmEyZmRjMDgxNjhlZjQ5ODVlNGIwNmU2ZTVjZjk3MWRlMmQ5NWYxMmJjNjJlY2EwNGM0ZDFiYzZmYzQ0NDc4N2IwNWEzZjYwZDZjZDUzNDJlYzFiOWY2NGFkOGU5OGQ3ZThkMzE1ZDQzYWQ0YjJlMmE1ZWZkZjEyZWU0ZTBkZmRhMjdmY2VhMzc3N2ZiYzIwZjdjZmFhNWU3NDU5ZmM2MDRjNzQ5MjA2MmNjNjJjYmZiNzJkOWJiZGMyODQzOTE1NzIxNDMwODc0NmZiNWZjYmYxMGU1MTY4MjVlOTU3YWE1Mzg0ZDU0ODJmOTAwYWFlMjA3M2I3NGQxMDRiZDk5YzM0MDViODY5NjBhZjY3NDM2MWNlNzlmMmFmOGVkNDBhZmRiZWMwODkwM2NiOTZlNzcwNzk2OTYwZDNlZDM1ZGEwM2YxZmEwYTQ1Mzc3ZTQzNWNkZmVlNzE4OTYyYjkyOWFiM2ZmYjdlODc3NjI1ZWFiYzU4NTYxNWJjNGY5ODk3MjdkZTViMjUwNDZmYWJlMWZiZWI1MWUxZWNlMzQzYmE3YzkxNTUzMDI4OTBjYzU0YTJiMGM2Yjg1ZTQ=</encrypt>
+    </jdpay>
+    EOF
+    stub_request(:post, JdPay::Service::CANCEL_USER_URL).to_return(body: xml_str)
+    expect_xml = <<-EOF
+    <?xml version="1.0" encoding="UTF-8"?><jdpay><version>V2.0</version><merchant>22294531</merchant><result><code>000000</code><desc>成功</desc></result><sign>DUUlg3VLAFgx7vT6nCRBagmyJ8O8xsGC70kb6z9FjSO6vy3Vi7VNJ9rYizT+zP4JXOWxyeOAcgpY4O1I5tT1xrmh0N6k/z8PmRbKYXjUNNY999+teh5Ahwy9aigHw0u1ilWFcKmAMhF1gfyjX66WSKxMQASnDHTCEh8m1VBf76o=</sign></jdpay>
+    EOF
+    assert_equal Hash.from_xml(expect_xml), JdPay::Service.cancel_user({userId: "123"})
+  end
 end

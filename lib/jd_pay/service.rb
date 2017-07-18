@@ -10,6 +10,8 @@ module JdPay
     PC_PAY_URL = 'https://wepay.jd.com/jdpay/saveOrder'
     REVOKE_URL = 'https://paygate.jd.com/service/revoke'
     QRCODE_PAY_URL = 'https://paygate.jd.com/service/fkmPay'
+    USER_RELATION_URL = 'https://paygate.jd.com/service/getUserRelation'
+    CANCEL_USER_URL = 'https://paygate.jd.com/service/cancelUserRelation'
 
     class << self
       # the difference between pc and h5 is just request url
@@ -68,6 +70,31 @@ module JdPay
         params[:sign] = JdPay::Sign.rsa_encrypt(JdPay::Util.to_xml(params), options)
 
         JdPay::Result.new(Hash.from_xml(invoke_remote(QRCODE_PAY_URL, make_payload(params), options)), options)
+      end
+
+      USER_RELATION_REQUIRED_FIELDS = [:useId]
+      def user_relation(params, options = {})
+        params = {
+          version: "V2.0",
+          merchant: options[:mch_id] || JdPay.mch_id,
+        }.merge(params)
+
+        check_required_options(params, USER_RELATION_REQUIRED_FIELDS)
+        params[:sign] = JdPay::Sign.rsa_encrypt(JdPay::Util.to_xml(params), options)
+
+        JdPay::Result.new(Hash.from_xml(invoke_remote(USER_RELATION_URL, make_payload(params), options)), options)
+      end
+
+      def cancel_user(params, options = {})
+        params = {
+          version: "V2.0",
+          merchant: options[:mch_id] || JdPay.mch_id,
+        }.merge(params)
+
+        check_required_options(params, USER_RELATION_REQUIRED_FIELDS)
+        params[:sign] = JdPay::Sign.rsa_encrypt(JdPay::Util.to_xml(params), options)
+
+        JdPay::Result.new(Hash.from_xml(invoke_remote(CANCEL_USER_URL, make_payload(params), options)), options)
       end
 
       REFUND_REQUIRED_FIELDS = [:tradeNum, :oTradeNum, :amount, :notifyUrl]

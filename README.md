@@ -235,6 +235,44 @@ JdPay::Service.notify_verify(xml_str, options = {})
 
   JdPay::Service.notify_verify(notyfy_xml)
 ```
+### 用户关系查询接口
+#### Name && Description
+> 若商户用户与京东用户关联，下次支付时可跳过身份识别环境进行支付。此接口提供了用户关系查询功能。
+
+```ruby
+user_relation
+```
+#### Definition
+
+```ruby
+JdPay::Service.user_relation(params, options = {})
+```
+#### Example
+
+```ruby
+  # refund required keys [:userId]
+  params = { userId: '12345678' }
+  JdPay::Service.user_relation(params)
+```
+### 用户关系解绑接口
+#### Name && Description
+> 解绑用户关系，解绑后，用户下一次支付，需重新通过手机等登录方式进行身份验证。
+
+```ruby
+cancel_user
+```
+#### Definition
+
+```ruby
+JdPay::Service.cancel_user(params, options = {})
+```
+#### Example
+
+```ruby
+  # refund required keys [:userId]
+  params = { userId: '12345678' }
+  JdPay::Service.cancel_user(params)
+```
 ## QrService(京东付款码账户)
 
 ### 京东付款码支付接口
@@ -320,4 +358,4 @@ Donate to maintainer let him make this gem better.
 [donate link](https://ruby-china.org/hemengzhi88).<br/>
 
 <img src="https://raw.githubusercontent.com/genkin-he/md_photos/master/alipay.jpg" alt="alipay" width="200" align='left'>
-<img src="https://raw.githubusercontent.com/genkin-he/md_photos/master/wx_pay.png" alt="wx_pay" width="220" align='left'>
+<!-- <img src="https://raw.githubusercontent.com/genkin-he/md_photos/master/wx_pay.png" alt="wx_pay" width="220" align='left'> -->
