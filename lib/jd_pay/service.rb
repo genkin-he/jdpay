@@ -9,6 +9,7 @@ module JdPay
     H5_PAY_URL = 'https://h5pay.jd.com/jdpay/saveOrder'
     PC_PAY_URL = 'https://wepay.jd.com/jdpay/saveOrder'
     REVOKE_URL = 'https://paygate.jd.com/service/revoke'
+    QRCODE_PAY_URL = 'https://paygate.jd.com/service/fkmPay'
 
     class << self
       # the difference between pc and h5 is just request url
@@ -39,7 +40,7 @@ module JdPay
         JdPay::Util.build_pay_form(url, params)
       end
 
-      UNIORDER_REQUIRED_FIELDS = [:tradeNum, :tradeName, :amount, :orderType, :notifyUrl]
+      UNIORDER_REQUIRED_FIELDS = [:tradeNum, :tradeName, :amount, :orderType, :notifyUrl, :userId]
       def uniorder(params, options = {})
         params = {
           version: "V2.0",
@@ -51,11 +52,22 @@ module JdPay
         check_required_options(params, UNIORDER_REQUIRED_FIELDS)
         params[:sign] = JdPay::Sign.rsa_encrypt(JdPay::Util.to_xml(params), options)
 
-        r = JdPay::Result.new(Hash.from_xml(invoke_remote(UNIORDER_URL, make_payload(params), options)), options)
+        JdPay::Result.new(Hash.from_xml(invoke_remote(UNIORDER_URL, make_payload(params), options)), options)
+      end
 
-        yield r if block_given?
+      QRCODE_REQUIRED_FIELDS = [:tradeNum, :tradeName, :amount, :device, :token]
+      def qrcode_pay(params, options = {})
+        params = {
+          version: "V2.0",
+          merchant: options[:mch_id] || JdPay.mch_id,
+          tradeTime: Time.now.strftime("%Y%m%d%H%M%S"),
+          currency: "CNY"
+        }.merge(params)
 
-        r
+        check_required_options(params, QRCODE_REQUIRED_FIELDS)
+        params[:sign] = JdPay::Sign.rsa_encrypt(JdPay::Util.to_xml(params), options)
+
+        JdPay::Result.new(Hash.from_xml(invoke_remote(QRCODE_PAY_URL, make_payload(params), options)), options)
       end
 
       REFUND_REQUIRED_FIELDS = [:tradeNum, :oTradeNum, :amount, :notifyUrl]
@@ -70,11 +82,7 @@ module JdPay
         check_required_options(params, REFUND_REQUIRED_FIELDS)
         params[:sign] = JdPay::Sign.rsa_encrypt(JdPay::Util.to_xml(params), options)
 
-        r = JdPay::Result.new(Hash.from_xml(invoke_remote(REFUND_URL, make_payload(params), options)), options)
-
-        yield r if block_given?
-
-        r
+        JdPay::Result.new(Hash.from_xml(invoke_remote(REFUND_URL, make_payload(params), options)), options)
       end
 
       QUERY_REQUIRED_FIELDS = [:tradeNum, :tradeType]
@@ -88,11 +96,7 @@ module JdPay
         check_required_options(params, QUERY_REQUIRED_FIELDS)
         params[:sign] = JdPay::Sign.rsa_encrypt(JdPay::Util.to_xml(params), options)
 
-        r = JdPay::Result.new(Hash.from_xml(invoke_remote(QUERY_URL, make_payload(params), options)), options)
-
-        yield r if block_given?
-
-        r
+        JdPay::Result.new(Hash.from_xml(invoke_remote(QUERY_URL, make_payload(params), options)), options)
       end
 
       REVOKE_REQUIRED_FIELDS = [:tradeNum, :oTradeNum, :amount]
@@ -107,16 +111,11 @@ module JdPay
         check_required_options(params, REVOKE_REQUIRED_FIELDS)
         params[:sign] = JdPay::Sign.rsa_encrypt(JdPay::Util.to_xml(params), options)
 
-        r = JdPay::Result.new(Hash.from_xml(invoke_remote(REVOKE_URL, make_payload(params), options)), options)
-
-        yield r if block_given?
-        r
+        JdPay::Result.new(Hash.from_xml(invoke_remote(REVOKE_URL, make_payload(params), options)), options)
       end
 
       def notify_verify(xml_str, options = {})
-        r = JdPay::Result.new(Hash.from_xml(xml_str), options)
-        yield r if block_given?
-        r
+        JdPay::Result.new(Hash.from_xml(xml_str), options)
       end
 
       private

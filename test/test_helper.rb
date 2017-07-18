@@ -37,3 +37,6 @@ JdPay.des_key = 'ta4E/aspLA3lgFGKmNDNRYU92RkZ4w2t'
 JdPay.md5_key = 'pvmkZFhudHnwblIxgWsnvFqDHRrVDmfU'
 JdPay.mch_id = '22294531'
 JdPay.debug_mode = true
+JdPay.qr_pri_key = TEST_RSA_PRIVATE_KEY
+JdPay.qr_des_key = 'ta4E/aspLA3lgFGKmNDNRYU92RkZ4w2t'
+JdPay.qr_mch_id = '22294531'

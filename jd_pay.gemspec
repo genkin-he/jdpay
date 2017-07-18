@@ -4,12 +4,12 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'jd_pay/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "jd_pay"
+  spec.name          = "jdpay"
   spec.version       = JdPay::VERSION
   spec.authors       = ["Genkin He"]
   spec.email         = ["hemengzhi88@gmail.com"]
-  spec.summary       = %q{An unofficial simple jd_pay gem.}
-  spec.description   = %q{An unofficial simple jd_pay gem}
+  spec.summary       = %q{An unofficial simple jdpay gem.}
+  spec.description   = %q{An unofficial simple jdpay gem}
   spec.homepage      = "https://github.com/genkin-he/jd_pay"
   spec.license       = "MIT"
 

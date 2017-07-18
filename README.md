@@ -10,13 +10,13 @@ JdPay official document: http://payapi.jd.com/.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'jd_pay'
+gem 'jdpay'
 ```
 
 or development version
 
 ```ruby
-gem 'jd_pay', :github => 'genkin-he/jd_pay'
+gem 'jdpay', :github => 'genkin-he/jd_pay'
 ```
 
 And then execute:
@@ -28,10 +28,16 @@ $ bundle
 ## Configuration
 
 ```ruby
+# NOTE: 京东支付与京东付款码支付是两套账号密钥.
+# 京东支付配置
 JdPay.mch_id = 'YOUR_MERCHANT_NUM'
 JdPay.des_key = 'YOUR_3DES_KEY'
 JdPay.md5_key = 'YOUR_MD5_KEY'
 JdPay.pri_key = 'YOUR_RSA_PRIVATE_KEY'
+# 京东付款码支付配置
+JdPay.qr_mch_id = 'YOUR_MERCHANT_NUM'
+JdPay.qr_des_key = 'YOUR_3DES_KEY'
+JdPay.qr_pri_key = 'YOUR_RSA_PRIVATE_KEY'
 
 #JdPay.pub_key = 'JDPAY_RSA_PUBLIC_KEY'
 #JdPay.debug_mode = true # Enable parameter check. Default is true.
@@ -50,7 +56,7 @@ Service.uniorder({
 })
 ```
 
-## Service
+## Service(京东支付账户)
   Check **[JdPay official document](http://payapi.jd.com/)** for detailed request params and return fields
 
 ### 统一下单接口
@@ -70,13 +76,14 @@ JdPay::Service.uniorder(params, options = {})
 
 ```ruby
 # required fields
-# [:tradeNum, :tradeName, :amount, :orderType, :notifyUrl]
+# [:tradeNum, :tradeName, :amount, :orderType, :notifyUrl, :userId]
 params = {
   tradeNum: '123456780',
   tradeName: '测试商品',
   amount: '1',
   orderType: '0',
-  notifyUrl: 'http://making.dev/notify'
+  notifyUrl: 'http://making.dev/notify',
+  userId: '123456780'
 }
 result = JdPay::Service.uniorder(params)
 
@@ -228,8 +235,68 @@ JdPay::Service.notify_verify(xml_str, options = {})
 
   JdPay::Service.notify_verify(notyfy_xml)
 ```
+## QrService(京东付款码账户)
 
+### 京东付款码支付接口
 
+#### Name && Description
+> 付款码支付接口用于客户使用付款码支付时，商户使用扫码枪完成一键下单并支付功能。在支付过程中对支付请求进行校验后，完成支付流程。
+
+```ruby
+qrcode_pay
+```
+#### Definition
+
+```ruby
+JdPay::QrService.qrcode_pay(params, options = {})
+```
+#### Example
+
+```ruby
+# required fields
+# [:tradeNum, :tradeName, :amount, :device, :token]
+params = {
+  tradeNum: '123456780',
+  tradeName: '测试商品',
+  amount: '1',
+  device: '0001',
+  token: '2563256985478547856'
+}
+JdPay::QrService.qrcode_pay(params)
+```
+### 京东付款码交易查询
+#### Definition
+
+```ruby
+JdPay::QrService.query(params, options = {})
+```
+#### Example
+
+```ruby
+# refer to：JdPay::Service.query(params, options = {})
+```
+### 京东付款码交易退款
+#### Definition
+
+```ruby
+JdPay::QrService.refund(params, options = {})
+```
+#### Example
+
+```ruby
+# refer to：JdPay::Service.refund(params, options = {})
+```
+### 京东付款码异步通知解密验签
+#### Definition
+
+```ruby
+JdPay::QrService.notify_verify(params, options = {})
+```
+#### Example
+
+```ruby
+# refer to：JdPay::Service.notify_verify(params, options = {})
+```
 ## Contributing
 
 Bug report or pull request are welcome.
