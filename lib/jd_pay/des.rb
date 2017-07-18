@@ -3,22 +3,20 @@ module JdPay
     class << self
       def encrypt_3des(str, options = {})
         des = OpenSSL::Cipher::Cipher.new('des-ede3')
-        str = format_str_data(str)
         des.encrypt
         des.key = decode_key(options)
         des.iv = des.random_iv
-        str = des.update(str)
+        str = des.update(format_str_data(str))
         to_hex(str.bytes)
       end
 
       def decrypt_3des(encrypt_str, options = {})
-        encrypt_str = to_decimal(encrypt_str)
         des2 = OpenSSL::Cipher::Cipher.new('des-ede3')
         des2.decrypt
         des2.key = decode_key(options)
         des2.iv = des2.random_iv
         des2.padding = 0
-        result = (des2.update(encrypt_str) + des2.final).bytes
+        result = (des2.update(to_decimal(encrypt_str)) + des2.final).bytes
         result.first(valid_size(result.shift(4))).map(&:chr).join.force_encoding('utf-8').encode('utf-8')
       end
 

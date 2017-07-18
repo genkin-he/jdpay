@@ -24,6 +24,7 @@ class JdPay::ServiceTest < Minitest::Test
       tradeName: '测试商品',
       amount: '1',
       orderType: '0',
+      userId: '123456',
       notifyUrl: 'http://making.dev/notify'
     }
     assert_equal @result, JdPay::Service.uniorder(params)
@@ -111,6 +112,7 @@ class JdPay::ServiceTest < Minitest::Test
     EOF
     assert_equal Hash.from_xml(expect_xml), JdPay::Service.user_relation({userId: "123"})
   end
+
   def test_cancel_user
     xml_str = <<-EOF
     <jdpay>

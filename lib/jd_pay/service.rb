@@ -72,7 +72,7 @@ module JdPay
         JdPay::Result.new(Hash.from_xml(invoke_remote(QRCODE_PAY_URL, make_payload(params), options)), options)
       end
 
-      USER_RELATION_REQUIRED_FIELDS = [:useId]
+      USER_RELATION_REQUIRED_FIELDS = [:userId]
       def user_relation(params, options = {})
         params = {
           version: "V2.0",

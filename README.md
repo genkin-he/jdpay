@@ -250,7 +250,7 @@ JdPay::Service.user_relation(params, options = {})
 #### Example
 
 ```ruby
-  # refund required keys [:userId]
+  # user_relation required keys [:userId]
   params = { userId: '12345678' }
   JdPay::Service.user_relation(params)
 ```
@@ -269,7 +269,7 @@ JdPay::Service.cancel_user(params, options = {})
 #### Example
 
 ```ruby
-  # refund required keys [:userId]
+  # cancel_user required keys [:userId]
   params = { userId: '12345678' }
   JdPay::Service.cancel_user(params)
 ```
