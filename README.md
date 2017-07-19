@@ -1,6 +1,6 @@
 # JdPay
 
-A unofficial jd_pay ruby gem.
+A unofficial jdpay ruby gem.
 Thanks for [alipay](https://github.com/chloerei/alipay) and [wx_pay](https://github.com/jasl/wx_pay)
 
 JdPay official document: http://payapi.jd.com/.
@@ -16,7 +16,7 @@ gem 'jdpay'
 or development version
 
 ```ruby
-gem 'jdpay', :github => 'genkin-he/jd_pay'
+gem 'jdpay', :github => 'genkin-he/jdpay'
 ```
 
 And then execute:
