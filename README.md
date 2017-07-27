@@ -28,6 +28,7 @@ $ bundle
 ## Configuration
 
 ```ruby
+require 'jd_pay'
 # NOTE: 京东支付与京东付款码支付是两套账号密钥.
 # 京东支付配置
 JdPay.mch_id = 'YOUR_MERCHANT_NUM'
