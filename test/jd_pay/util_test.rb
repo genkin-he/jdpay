@@ -14,6 +14,12 @@ class JdPay::UtilTest < Minitest::Test
     assert_equal xml, JdPay::Util.to_xml(@params)
   end
 
+  def test_xml_out
+    params = {he: 'zhi', pay: [{pay_type: "1"}, {pay_type: "2"}]}
+    xml = "<he>zhi</he><pay><pay_type>1</pay_type></pay><pay><pay_type>2</pay_type></pay>"
+    assert_equal xml, JdPay::Util.xml_out(params)
+  end
+
   def test_to_uri
     uri = "he=zhi&meng=&zhi=he"
     assert_equal uri, JdPay::Util.to_uri(@params)

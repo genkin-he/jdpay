@@ -1,9 +1,26 @@
 module JdPay
   module Util
+    XML_HEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
     class << self
       def to_xml(params, options = {})
         options[:root] = options[:root] || 'jdpay'
-        denilize(params).to_xml(options).gsub(/>[[:space:]]+/, ">")
+        XML_HEAD + xml_out({ options[:root] => denilize(params) })
+      end
+
+      def xml_out(params)
+        xml = []
+        params.each do |k, v|
+          if v.is_a?(Array)
+            v.each do |ary|
+              xml << "<#{k}>#{xml_out(ary)}</#{k}>"
+            end
+          elsif v.is_a?(Hash)
+            xml << "<#{k}>#{xml_out(v)}</#{k}>"
+          else
+            xml << "<#{k}>#{v}</#{k}>"
+          end
+        end
+        xml.join
       end
 
       def to_uri(params)
