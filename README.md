@@ -358,5 +358,5 @@ Donate to maintainer let him make this gem better.
 
 [donate link](https://ruby-china.org/hemengzhi88).<br/>
 
-<img src="https://raw.githubusercontent.com/genkin-he/md_photos/master/alipay.jpg" alt="alipay" width="200" align='left'>
+<!-- <img src="https://raw.githubusercontent.com/genkin-he/md_photos/master/alipay.jpg" alt="alipay" width="200" align='left'> -->
 <!-- <img src="https://raw.githubusercontent.com/genkin-he/md_photos/master/wx_pay.png" alt="wx_pay" width="220" align='left'> -->
