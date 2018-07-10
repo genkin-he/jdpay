@@ -128,7 +128,7 @@ h5_pay
 #### Definition
 
 ```ruby
-JdPay::Service.pc_pay(params, options = {})
+JdPay::Service.h5_pay(params, options = {})
 ```
 
 ### 交易查询接口
