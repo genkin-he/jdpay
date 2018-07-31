@@ -44,6 +44,16 @@ JdPay.qr_pri_key = 'YOUR_RSA_PRIVATE_KEY'
 #JdPay.debug_mode = true # Enable parameter check. Default is true.
 ```
 
+*重要*：
+
+根据文档中的Q&A
+> 支付请求和异步返回的加密规则是什么？
+  答：支付请求用pkcs8的RSA私钥进行签名，des加密；
+    同步返回使用京东支付统一对外rsa公钥验签；
+    异步返回用3DES解密，京东支付统一对外rsa公钥验签。
+
+因此请勿为`JdPay.pub_key`设置你自己产生的公钥，默认不填就行。
+
 You can set default key, or pass a key directly to service method:
 
 ```ruby
@@ -101,7 +111,11 @@ pc_pay
 #### Definition
 
 ```ruby
+# 返回构建的表单，表单会自动发送POST请求，请求成功京东会进行页面跳转
 JdPay::Service.pc_pay(params, options = {})
+
+# 获取Redirect URL，前端获取后可以直接跳转京东收银台
+JdPay::Service.pc_pay(params, {:need_redirect_url => true})
 ```
 #### Example
 ```ruby
@@ -128,7 +142,11 @@ h5_pay
 #### Definition
 
 ```ruby
+# 返回构建的表单，表单会自动发送POST请求，请求成功京东会进行页面跳转
 JdPay::Service.h5_pay(params, options = {})
+
+# 获取Redirect URL，前端获取后可以直接跳转京东收银台
+JdPay::Service.h5_pay(params, {:need_redirect_url => true})
 ```
 
 ### 交易查询接口
@@ -221,7 +239,7 @@ JdPay::Service.notify_verify(xml_str, options = {})
 
 ```ruby
   # notify_verify required xml_str
-  notyfy_xml = <<-EOF
+  xml_str = <<-EOF
   <?xml version=\"1.0\" encoding=\"UTF-8\" ?>
   <jdpay>
     <version>V2.0</version>
@@ -234,8 +252,31 @@ JdPay::Service.notify_verify(xml_str, options = {})
   </jdpay>
   EOF
 
-  JdPay::Service.notify_verify(notyfy_xml)
+  JdPay::Service.notify_verify(xml_str)
 ```
+
+### 支付成功页面跳转
+#### Name && Description
+> 用户支付成功后，京东支付系统根据支付接口中callbackUrl所传地址跳转到商户的支付成功页，并采用POST方式回传相应的订单参数。
+
+```ruby
+verify_redirection
+```
+#### Definition
+```ruby
+JdPay::Service.verify_redirection(params, options = {})
+```
+#### Example
+```ruby
+# In your controller:
+begin
+  decrypted_params = JdPay::Service.verify_redirection(request.params, {})
+rescue => e
+  render :status => :bad_request
+  return
+end
+```
+
 ### 用户关系查询接口
 #### Name && Description
 > 若商户用户与京东用户关联，下次支付时可跳过身份识别环境进行支付。此接口提供了用户关系查询功能。
@@ -336,6 +377,8 @@ JdPay::QrService.notify_verify(params, options = {})
 ```ruby
 # refer to：JdPay::Service.notify_verify(params, options = {})
 ```
+
+
 ## Contributing
 
 Bug report or pull request are welcome.
